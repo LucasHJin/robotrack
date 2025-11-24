@@ -10,6 +10,10 @@ def get_text(frame, region):
     text = pytesseract.image_to_string(roi_pil).strip()
     return text
 
+def crop_frame(frame):
+    height = frame.shape[0]
+    return frame[0:int(height * 0.675), :]
+
 def validate_frame(input_dir, output_dir):
     TEXT_REGION = (830, 15, 260, 45) 
     for filename in sorted(os.listdir(input_dir)):
@@ -17,8 +21,6 @@ def validate_frame(input_dir, output_dir):
             frame = cv2.imread(os.path.join(input_dir, filename))
             text = get_text(frame, TEXT_REGION)
             if "qualification" in text.lower():
-                cv2.imwrite(os.path.join(output_dir, filename), frame) # type: ignore
+                cropped = crop_frame(frame)
+                cv2.imwrite(os.path.join(output_dir, filename), cropped) # type: ignore
             os.remove(os.path.join(input_dir, filename))  
-            
-            
-validate_frame("data/raw", "data/clean")
