@@ -3,13 +3,7 @@ import subprocess # needed to run CLI commands like yt-dlp and ffmpeg
 import numpy as np
 import os
 
-youtube_url = "https://www.youtube.com/watch?v=iO5byiwVXVw"
-output_dir = "data"
-frame_skip = 30
-os.makedirs(output_dir, exist_ok=True)
-
-
-def video_stats():
+def video_stats(youtube_url):
     # get width and height of chosen youtube video
     probe_cmd = [
         "yt-dlp",
@@ -22,8 +16,8 @@ def video_stats():
     width, height = map(int, result.stdout.strip().split('\n'))
     return width, height
 
-def stream_video():
-    width, height = video_stats()
+def stream_video(frame_skip, youtube_url, output_dir, video_count):
+    width, height = video_stats(youtube_url)
     
     # get video as live data stream
     yt_command = [
@@ -47,7 +41,6 @@ def stream_video():
     yt_process = subprocess.Popen(yt_command, stdout=subprocess.PIPE)
     ffmpeg_process = subprocess.Popen(ffmpeg_command, stdin=yt_process.stdout, stdout=subprocess.PIPE) # connect sp with pipes
 
-    # get every 30th frame
     frame_count = 0
     saved_count = 0
     while True:
@@ -58,7 +51,7 @@ def stream_video():
         frame = np.frombuffer(raw_frame, np.uint8).reshape((height, width, 3)) # convert raw bytes into image array
         
         if frame_count % frame_skip == 0:
-            cv2.imwrite(os.path.join(output_dir, f"frame_{saved_count:05d}.jpg"), frame)
+            cv2.imwrite(os.path.join(output_dir, f"v{video_count}_{saved_count:04d}.jpg"), frame)
             saved_count += 1
         
         frame_count += 1
@@ -68,4 +61,4 @@ def stream_video():
     ffmpeg_process.wait()
     yt_process.wait()
     
-print(video_stats())
+stream_video(60, "https://www.youtube.com/watch?v=iO5byiwVXVw", "data/raw", 1)
