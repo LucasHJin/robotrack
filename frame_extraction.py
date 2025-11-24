@@ -51,7 +51,7 @@ def stream_video(frame_skip, youtube_url, output_dir, video_count):
         frame = np.frombuffer(raw_frame, np.uint8).reshape((height, width, 3)) # convert raw bytes into image array
         
         if frame_count % frame_skip == 0:
-            cv2.imwrite(os.path.join(output_dir, f"v{video_count}_{saved_count:04d}.jpg"), frame)
+            cv2.imwrite(os.path.join(output_dir, f"v{video_count}_{saved_count:03d}.jpg"), frame)
             saved_count += 1
         
         frame_count += 1
@@ -61,4 +61,4 @@ def stream_video(frame_skip, youtube_url, output_dir, video_count):
     ffmpeg_process.wait()
     yt_process.wait()
     
-stream_video(60, "https://www.youtube.com/watch?v=iO5byiwVXVw", "data/raw", 1)
+# stream_video(60, "https://www.youtube.com/watch?v=iO5byiwVXVw", "data/raw", 1)
