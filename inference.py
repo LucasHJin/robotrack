@@ -2,8 +2,8 @@ from ultralytics import YOLO # type: ignore
 
 model = YOLO('./model/best.pt')
 
-results = model('path/to/video.mp4', save=True)
 
+# track doesn't work (loses track)
 results = model.track( 
     source='test_match.mp4',
     save=True,
