@@ -1,3 +1,5 @@
 evenv/
-data/
+unlabeled_data/
 __pycache__/
+dataset/
+.env
