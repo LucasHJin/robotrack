@@ -26,7 +26,7 @@ volume = modal.Volume.from_name("frc", create_if_missing=True)
 
 @app.function(volumes={"/data": volume}, gpu="L40S", timeout=36000, retries=1)
 def train():
-    from ultralytics import YOLO
+    from ultralytics import YOLO # type: ignore
 
     model = YOLO("yolov8x.pt")
 
