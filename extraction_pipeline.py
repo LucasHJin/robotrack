@@ -15,6 +15,6 @@ VIDEO_LIST = [
 ]
 
 for count, video in enumerate(VIDEO_LIST):
-    stream_video(60, video, "data/raw", count)
+    stream_video(60, video, "unlabeled_data/raw", count)
     
 validate_frame("data/raw", "data/clean")
